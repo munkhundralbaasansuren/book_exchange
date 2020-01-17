@@ -1,9 +1,9 @@
 import {Client} from '@loopback/testlab';
-import {BackApplication} from '../..';
+import {BookApplication} from '../..';
 import {setupApplication} from './test-helper';
 
 describe('HomePage', () => {
-  let app: BackApplication;
+  let app: BookApplication;
   let client: Client;
 
   before('setupApplication', async () => {

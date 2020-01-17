@@ -3,6 +3,7 @@ import { Entity, model, property, hasMany } from '@loopback/repository';
 
 @model()
 export class User extends Entity {
+
   @property({
     type: 'number',
     id: true,
@@ -13,6 +14,9 @@ export class User extends Entity {
   @property({
     type: 'string',
     required: true,
+    index: {
+      unique: true,
+    }
   })
   name: string;
 
@@ -20,9 +24,15 @@ export class User extends Entity {
     type: 'string',
     required: true,
   })
+  phonenumber: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
   password: string;
 
-  @hasMany(() => Book)
+  @hasMany(() => Book, { keyTo: 'UserId' })
   books?: Book[];
 
   constructor(data?: Partial<User>) {

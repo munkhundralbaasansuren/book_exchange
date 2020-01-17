@@ -1,5 +1,5 @@
 {
-  "name": "mysqlDs",
+  "name": "user",
   "connector": "mysql",
   "host": "localhost",
   "port": 3306,
