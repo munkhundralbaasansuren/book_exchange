@@ -1,39 +1,20 @@
 <template>
   <nav>
-    <v-snackbar v-model="snackbar" :timeout="4000" top color="success">
-      <!-- <span>Awesome! You added a new book.</span> -->
-      <!-- <v-btn color="white" flat @click="snackbar = false">Close</v-btn> -->
-    </v-snackbar>
-
-    <v-toolbar flat app>
-      <v-toolbar-side-icon @click="drawer = !drawer" class="grey--text"></v-toolbar-side-icon>
-      <v-toolbar-title class="text-uppercase grey--text">
+    <v-toolbar flat app top color="yellow">
+      <v-toolbar-side-icon @click="drawer = !drawer" class="white--text"></v-toolbar-side-icon>
+      <v-toolbar-title class="text-uppercase white--text">
         <span class="font-weight-light">Book</span>
         <span>Exchange</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <!-- menu -->
-      <v-menu offset-y>
-        <v-btn flat slot="activator" color="grey">
-          <v-icon left>expand_more</v-icon>
-          <span>Menu</span>
-        </v-btn>
-        <v-list>
-          <v-list-tile v-for="link in links" :key="link.text" router :to="link.route">
-            <v-list-tile-title>{{ link.text }}</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
-
-      <v-btn flat color="grey">
-        <span>Sign Out</span>
+      <v-btn v-if="authenticated" to="/login" v-on:click.native="logout()" replace flat color="white">
+        <span>log out</span>
         <v-icon right>exit_to_app</v-icon>
-        
       </v-btn>
     </v-toolbar>
 
-    <v-navigation-drawer app v-model="drawer" class="primary">
+    <v-navigation-drawer app v-model="drawer" class="purple">
       <v-layout column align-center>
         <v-flex class="mt-5">
           <v-avatar size="100">
@@ -56,7 +37,6 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-
   </nav>
 </template>
 
@@ -68,6 +48,7 @@ export default {
   components: { Popup },
   data() {
     return {
+      authenticated: true,
       drawer: false,
       links: [
         { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
@@ -76,6 +57,17 @@ export default {
       ],
       snackbar: false
     }
+  }, 
+  mounted() {
+      if(!this.authenticated) {
+          this.$router.replace({ name: "login" });
+      }
+  },
+  methods: {
+    logout() {
+          this.authenticated = false;
+    }
   }
 }
 </script>
+

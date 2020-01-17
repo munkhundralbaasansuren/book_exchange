@@ -9,18 +9,11 @@
         <v-form class="px-3" ref="form" @submit.prevent="submit">
           <v-text-field v-model="isbn" label="isbn" prepend-icon="edit" :rules="isbnField"></v-text-field>
           <v-text-field v-model="title" label="Title" prepend-icon="folder" :rules="inputRules"></v-text-field>
-          <v-text-field v-model="Author" label="Author" prepend-icon="folder" :rules="inputRules"></v-text-field>
+          <v-text-field v-model="Author" label="Author" prepend-icon="person" :rules="inputRules"></v-text-field>
           <v-text-field v-model="Bookvol" label="Bookvol" prepend-icon="folder" :rules="inputRules"></v-text-field>
-          <!-- <v-file-input v-model="File" label="File input" filled prepend-icon="mdi-camera" :rules="inputRules"></v-file-input> -->
-
-          <v-menu v-model="menu" :close-on-content-click="false">
-            <!-- <v-text-field slot="activator" :rules="inputRules"
-              :value="formattedDate" clearable label="Due date" prepend-icon="date_range">
-            </v-text-field>  -->
-            <v-date-picker v-model="due" @change="menu = false"></v-date-picker>
-          </v-menu>
           <v-spacer></v-spacer>
           <v-btn flat type="submit" class="success mx-0 mt-3" :loading="loading">Add Book</v-btn>
+          <v-btn flat type="exit" class="success mx-0 mt-3" :cancel="cancel">Cancel</v-btn>
         </v-form>
       </v-card-text>
     </v-card>
@@ -38,10 +31,7 @@ export default {
       isbn: '',
       title: '',
       Author: '', 
-      Bookvol: '', 
-      // File:'', 
-      due: null,
-      menu: false,
+      Bookvol: '',  
       inputRules: [
         v => !!v || 'This field is required',
         v => v.length >= 3 || 'Minimum length is 3 characters'
@@ -51,7 +41,8 @@ export default {
         v => isbn.Validate(v) || 'The value is not valid ISBN'
       ], 
       loading: false,
-      dialog: false
+      dialog: false, 
+      cancel: false, 
     }
   },
   methods: {
@@ -63,24 +54,17 @@ export default {
           name: this.title,
           bookauthor: this.Author,
           bookvol: this.Bookvol,
-          // File: this.File, 
-          // due: format(this.due, 'Do MMM YYYY'),
-          // person: 'undraaaaaaaaaa',
         } 
         console.log(book)
         this.axios.post('http://localhost:3000/books', book) .then(() => {
           this.loading = false
           this.dialog = false
-          this.$emit('booktAdded')
         })
       }    
+    }, 
+    exit() {
+     //
     }
   },
-  // computed: {
-  //   formattedDate () {
-  //     console.log(this.due)
-  //     return this.due ? format(this.due, 'Do MMM YYYY') : ''
-  //   }
-  // }
 }
 </script>

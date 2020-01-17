@@ -1,7 +1,6 @@
 <template>
   <div class="books">
     <h1 class="subheading grey--text">Books</h1>
-
     <v-container class="my-5">
       <v-expansion-panel>
         <v-expansion-panel-content v-for="book in myBooks" :key="book.books">
@@ -15,12 +14,10 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-container>
-    
   </div>
 </template>
 
 <script>
-
 export default {
   data() {
     return {

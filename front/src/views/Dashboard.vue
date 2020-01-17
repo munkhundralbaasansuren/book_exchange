@@ -1,49 +1,37 @@
 <template>
   <div class="dashboard">
     <h1 class="subheading grey--text">Dashboard</h1>
-
     <v-container class="my-5">
-
       <v-layout row justify-start class="mb-3">
-        <v-tooltip top>
-          <v-btn small flat color="grey" @click="sortBy('title')" slot="activator">
-            <v-icon small left>folder</v-icon>
-            <span class="caption text-lowercase">name</span>
-          </v-btn>
-          <span>Sort by book author</span>
-        </v-tooltip>
-        <v-tooltip top>
-          <v-btn small flat color="grey" @click="sortBy('person')" slot="activator">
-            <v-icon small left>person</v-icon>
-            <span class="caption text-lowercase">By Person</span>
-          </v-btn>
-          <span>Sort by book author</span>
-        </v-tooltip>
+        <v-toolbar dense>
+          <v-text-field hide-details prepend-icon="search" single-line placeholder="Search title.."></v-text-field>
+        </v-toolbar> 
       </v-layout>
-      
       <v-card flat v-for="book in books" :key="book.books">
         <v-layout row wrap :class="`pa-3 book ${book.status}`">
-          <v-flex xs12 md6>
-            <div class="caption grey--text">Title</div>
+          <!-- <v-flex xs4 sm4 md2> -->
+            <v-flex md4>
+            <div class="caption grey--text">Номны нэр</div>
             <div>{{ book.name }}</div>
           </v-flex>
-          <v-flex xs6 sm4 md2>
-            <div class="caption grey--text">Author</div>
+          <v-flex md2>
+            <div class="caption grey--text">Зохиолч</div>
             <div>{{ book.bookauthor }}</div>
           </v-flex>
-          <v-flex xs6 sm4 md2>
-            <div class="caption grey--text">Book vol</div>
+          <v-flex md2>
+            <div class="caption grey--text">Боть, Төрөл</div>
             <div>{{ book.bookvol }}</div>
           </v-flex>
-          <v-flex xs6 sm4 md2>
+          <v-flex md2>
             <div class="caption grey--text">ISBN</div>
             <div>{{ book.isbn }}</div>
           </v-flex>
-          <v-flex xs2 sm4 md2>
+          <v-btn rounded color="purple" dark>Book Exchange</v-btn>
+          <!-- <v-flex xs2 sm4 md2>
             <div class="right">
               <v-chip small :class="`${book.status} white--text my-2 caption`">{{ book.status }}</v-chip>
             </div>
-          </v-flex>
+          </v-flex> -->
         </v-layout>
         <v-divider></v-divider>
       </v-card>
@@ -61,24 +49,20 @@ export default {
       books: []
     }
   },
-
   created() {
     axios.get('http://localhost:3000/books').then(response => this.books = response.data);
   },
-
   methods : {
     SearchContacts : function () {
-
       axios.get('http://localhost:3000/books', {
           params: {
               //
           }
       })
-          .then(response => this.contacts = response.data)
-          .catch(function (error) {
-              console.log(error);
-          });
-
+      .then(response => this.contacts = response.data)
+      .catch(function (error) {
+          console.log(error);
+      });
     },
   }
 }
