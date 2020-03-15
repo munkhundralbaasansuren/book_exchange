@@ -1,12 +1,10 @@
 // Uncomment these imports to begin using these cool features!
 // import {inject} from '@loopback/context';
-import { get, post, getModelSchemaRef, requestBody, HttpErrors } from '@loopback/rest';
+import { post, getModelSchemaRef, requestBody, HttpErrors } from '@loopback/rest';
 import { UserRepository } from '../repositories';
 import { repository } from '@loopback/repository';
 import { User } from '../models';
-import { threadId } from 'worker_threads';
-
-
+// import { threadId } from 'worker_threads';
 export class UserController {
   constructor(
     @repository(UserRepository)
@@ -53,8 +51,6 @@ export class UserController {
 
     return ''
   }
-
-
   @post('/userlogin', {
     responses: {
       '200': {
@@ -77,23 +73,23 @@ export class UserController {
           }
         }
       }
-    }) user: User): Promise<String> {
-
+    }) user: User): Promise<string> {
+    let existsUser;
+      // console.log(existsUser = await this.userRepository.findOne({ where: { name: user.name, password: user.password } }))
     try {
-      let existsUser = await this.userRepository.findOne({ where: { name: user.name, password: user.password } })
+      existsUser = await this.userRepository.findOne({ where: { name: user.name, password: user.password } })
 
       if (!existsUser) {
-        throw new HttpErrors.BadRequest('user already registered')
+        throw new HttpErrors.BadRequest('user not found')
       }
-
-      // await this.userRepository.create(user)
     }
     catch (error) {
-      throw new HttpErrors.BadRequest('user already registered')
+      console.log(error)
+      throw new HttpErrors.BadRequest(error.message)
     }
-
-    return ''
+    // let id = existsUser.id
+    const result = JSON.stringify(existsUser); 
+    return result;
+    // return JSON.stringify("userId": existsUser.id, "username": existsUser.name);
   }
-
-
 }

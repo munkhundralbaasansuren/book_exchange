@@ -4,10 +4,10 @@
     <v-container class="my-5">
       <v-layout row justify-start class="mb-3">
         <v-toolbar dense>
-          <v-text-field hide-details prepend-icon="search" single-line placeholder="Search title.."></v-text-field>
+          <v-text-field hide-details prepend-icon="search" v-model="searchValue" @change="() => search()" placeholder="Search title.."></v-text-field>
         </v-toolbar> 
       </v-layout>
-      <v-card flat v-for="book in books" :key="book.books">
+      <v-card flat v-for="book in books" :key="book.id">
         <v-layout row wrap :class="`pa-3 book ${book.status}`">
           <!-- <v-flex xs4 sm4 md2> -->
             <v-flex md4>
@@ -26,18 +26,12 @@
             <div class="caption grey--text">ISBN</div>
             <div>{{ book.isbn }}</div>
           </v-flex>
-          <v-btn rounded color="purple" dark>Book Exchange</v-btn>
-          <!-- <v-flex xs2 sm4 md2>
-            <div class="right">
-              <v-chip small :class="`${book.status} white--text my-2 caption`">{{ book.status }}</v-chip>
-            </div>
-          </v-flex> -->
-        </v-layout>
+
+            <v-btn type="button" v-on:click="exchange(`${book.id}`)" rounded color="purple" dark>Book Exchange</v-btn>
+         </v-layout>
         <v-divider></v-divider>
       </v-card>
-
     </v-container>
-   
   </div>
 </template>
 
@@ -46,24 +40,38 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      books: []
+      books: [], 
+      searchValue: '',
+      isExchange: false,
+      userId: '', 
     }
   },
-  created() {
-    axios.get('http://localhost:3000/books').then(response => this.books = response.data);
-  },
   methods : {
-    SearchContacts : function () {
-      axios.get('http://localhost:3000/books', {
-          params: {
-              //
-          }
-      })
-      .then(response => this.contacts = response.data)
-      .catch(function (error) {
-          console.log(error);
-      });
-    },
+    async search(){  
+      if(this.searchValue != null){
+        axios.get('http://localhost:3000/books?filter=' + this.searchValue)
+        .then(response =>  {
+          this.books = response.data;
+          console.log(this.books)
+        })
+        .catch(function(error){
+          console.log('error'); 
+        })
+      }
+    }, 
+    async exchange(bookId){
+        this.isExchange = true;
+        const values = {
+          userId: Number(localStorage.getItem('user')), 
+          bookId: Number(bookId)
+        }
+        this.axios.post('http://localhost:3000/exchanges', values) .then(() => {
+          this.isExchange = false
+        })
+      }
+  }, 
+  beforeMount(){
+    this.search(); 
   }
 }
 </script>
@@ -88,5 +96,4 @@ export default {
 .v-chip.overdue{
   background: #f83e70;
 }
-
 </style>

@@ -1,35 +1,53 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dashboard from './views/Dashboard.vue'
-import Books from './views/Books.vue'
-import Team from './views/Team.vue'
-import Login from './views/Login.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard
-    },
-    {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import(/* webpackChunkName: "about" */ './views/Dashboard.vue')
     },
     {
       path: '/books',
       name: 'books',
-      component: Books
+      component: () => import(/* webpackChunkName: "about" */ './views/Books.vue')
+    },
+    {
+      path: '/exchanges',
+      name: 'exchanges',
+      component: () => import(/* webpackChunkName: "about" */ './views/Exchanges.vue')
     },
     {
       path: '/team',
       name: 'team',
-      component: Team
+      component: () => import(/* webpackChunkName: "about" */ './views/Team.vue')
+    },
+    {
+      path: '*',
+      redirect: '/login'
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('user');
+
+  if (authRequired && !loggedIn) return next('/login');
+  else if(!authRequired && loggedIn) return next('/dashboard');
+
+  next();
+});
+
+export default router;

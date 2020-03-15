@@ -18,7 +18,6 @@ export class UserDataSource extends juggler.DataSource
   ) {
     super(dsConfig);
   }
-
   /**
    * Start the datasource when application is started
    */

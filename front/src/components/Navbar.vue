@@ -20,7 +20,7 @@
           <v-avatar size="100">
             <img class="text-lg-center" src="/avatar2.jpeg">
           </v-avatar>
-          <p class="white--text subheading mt-1">undraaaaaaaaaa</p>
+          <p class="white--text subheading mt-1">test</p>
         </v-flex>
         <v-flex class="mt-4 mb-3">
           <Popup @bookAdded="snackbar = true" />
@@ -42,17 +42,18 @@
 
 <script>
 import Popup from './Popup'
-// import login from './login'
+import {mapActions} from 'vuex'
 
 export default {
   components: { Popup },
   data() {
     return {
-      authenticated: true,
+      authenticated: localStorage.getItem('user') !== null,
       drawer: false,
       links: [
         { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
         { icon: 'folder', text: 'My Books', route: '/books' },
+        { icon: 'folder', text: 'Book Exchange', route: '/exchanges' },
         { icon: 'person', text: 'Team', route: '/team' },
       ],
       snackbar: false
@@ -64,8 +65,13 @@ export default {
       }
   },
   methods: {
+    ...mapActions([
+      'logout'
+    ]),
     logout() {
-          this.authenticated = false;
+      this.authenticated = false;
+      localStorage.removeItem('user');
+      location.reload();
     }
   }
 }

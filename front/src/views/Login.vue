@@ -54,6 +54,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'login', 
@@ -72,12 +73,21 @@ export default {
 	  ],
 	  loading: false,
 	  article: false, 
-	  load: false
+	  load: false, 
+	  accessToken: null, 
 	}	
-	
   },
-
+  computed: {
+	...mapState([
+        'loggingIn',
+        'loginError',
+        'loginSuccessful'
+	])
+  },
   methods: {
+	...mapActions([
+      'doLogin'
+    ]),
     async signup() {
       if(this.$refs.form.validate()) {
 		this.loading = true
@@ -100,20 +110,26 @@ export default {
 	async signin() {
 		if(this.$refs.form.validate()) {
 			this.load = true
-			const user = { 
-			name: this.username, 
-			password: this.password, 
-			} 
-			try {
-				let response = await axios.post('http://localhost:3000/userlogin', user);
-
-				if (response && response.status == 200 && this.password != "") {
-					this.$emit("authenticated", true);
-                    this.$router.replace({ name: "dashboard" });					
-				}
-			} catch(error) {
-				this.text = 'Уучлаарай хэрэглэгчийн нэр эсвэл нууц үг буруу байна'
+			const user = {
+				name: this.username, 
+				password: this.password
 			}
+			this.doLogin(user)
+			setTimeout(() => {
+				if(localStorage.getItem('user') === null)
+					this.text = 'Уучлаарай хэрэглэгчийн нэр эсвэл нууц үг буруу байна';
+			}, 500);
+			// try {
+			// 	let response = await axios.post('http://localhost:3000/userlogin', user);
+
+			// 	if (response && response.status == 200 && this.password != "") {
+			// 		this.$emit("authenticated", true);
+			// 		this.$router.replace({ name: "dashboard" });
+							
+			// 	}
+			// } catch(error) {
+			// 	this.text = 'Уучлаарай хэрэглэгчийн нэр эсвэл нууц үг буруу байна'
+			// }
 		}    
 	},
   },	

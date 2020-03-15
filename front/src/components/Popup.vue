@@ -13,7 +13,7 @@
           <v-text-field v-model="Bookvol" label="Bookvol" prepend-icon="folder" :rules="inputRules"></v-text-field>
           <v-spacer></v-spacer>
           <v-btn flat type="submit" class="success mx-0 mt-3" :loading="loading">Add Book</v-btn>
-          <v-btn flat type="exit" class="success mx-0 mt-3" :cancel="cancel">Cancel</v-btn>
+          <v-btn class="greycancel mt-3" @click.stop="$emit('close')">Cancel</v-btn>
         </v-form>
       </v-card-text>
     </v-card>
@@ -23,7 +23,8 @@
 <script>
 import axios from 'axios'
 import format from 'date-fns/format'
-const isbn = require( 'isbn-validate' );
+const isbn = require( 'isbn-validate' )
+import StackModal from '@innologica/vue-stackable-modal';
 
 export default {
   data() {
@@ -32,6 +33,7 @@ export default {
       title: '',
       Author: '', 
       Bookvol: '',  
+      userId: '', 
       inputRules: [
         v => !!v || 'This field is required',
         v => v.length >= 3 || 'Minimum length is 3 characters'
@@ -47,13 +49,15 @@ export default {
   },
   methods: {
     submit() {
+      console.log(localStorage.getItem('user'))
       if(this.$refs.form.validate()) {
-        this.loading = true
+        this.loading = true; 
         const book = { 
           isbn: this.isbn,
           name: this.title,
           bookauthor: this.Author,
           bookvol: this.Bookvol,
+          userId: Number(localStorage.getItem('user'))
         } 
         console.log(book)
         this.axios.post('http://localhost:3000/books', book) .then(() => {
@@ -68,3 +72,9 @@ export default {
   },
 }
 </script>
+
+<style>
+  .greycancel {
+  float: right;
+}
+</style>

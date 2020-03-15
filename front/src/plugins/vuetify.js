@@ -13,7 +13,8 @@ Vue.use(Vuetify, {
     info: '#ffaa2c',
     error: '#f83e70', 
     yellow: '#D68910', 
-    purple: '#FFA07A', 
+	purple: '#FFA07A', 
+	// greycancel: '#656465'
   },
   components: {
     VSnackbar,

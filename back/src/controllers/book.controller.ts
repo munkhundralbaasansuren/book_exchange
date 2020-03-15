@@ -1,9 +1,7 @@
-// Uncomment these imports to begin using these cool features!
-// import {inject} from '@loopback/context';
 import { get, post, getModelSchemaRef, requestBody, param } from '@loopback/rest';
 import { BookRepository, UserRepository } from '../repositories';
 import { repository, Filter } from '@loopback/repository';
-import { Book, User } from '../models';
+import { Book } from '../models';
 
 export class BookController {
   constructor(
@@ -34,23 +32,23 @@ export class BookController {
               isbn: { type: 'string', example: '555555555555' },
               bookvol: { type: 'string', example: 'vot 5' },
               bookauthor: { type: 'string', example: 'dorj' },
+              userId: {type: 'number'}, 
             },
-            required: ['name', 'ISBN', 'bookvol', 'bookauthor'],
+            required: ['name', 'isbn', 'bookvol', 'bookauthor', 'userId'],
           }
         }
       }
     }) book: Book): Promise<String> {
-    this.bookRepository.create(book);
-    return ""
+    this.bookRepository.create(book);  
+    return ""  
   }
-
-  @post('/user/{id}/book')
-  async createOrder(
-    @param.path.number('id') userId: typeof User.prototype.id,
-    @requestBody() bookData: Book,
-  ): Promise<Book> {
-    return this.userRepository.books(userId).create(bookData);
-  }
+  // @post('/user/{id}/book')
+  // async createOrder(
+  //   @param.path.number('id') userId: typeof User.prototype.id,
+  //   @requestBody() bookData: Book,
+  // ): Promise<Book> {
+  //   return this.userRepository.books(userId).create(bookData);
+  // }
 
   @get('/books', {
     responses: {
@@ -59,10 +57,12 @@ export class BookController {
         content: { 'application/json': { schema: getModelSchemaRef(Book) } },
       },
     },
+
   })
   async getBooks(
     @param.query.string('filter') filter?: Filter<Book>): Promise<Book[]> {
-    // filter = { userId: 2 };
-    return this.bookRepository.find(filter);
+    let books = await this.bookRepository.find({where: {name: {like: '%' + filter + '%'}}})
+    console.log(books)
+    return books;
   }
 }

@@ -1,5 +1,4 @@
-import { Book } from './book.model';
-import { Entity, model, property, hasMany } from '@loopback/repository';
+import { Entity, model, property} from '@loopback/repository';
 
 @model()
 export class User extends Entity {
@@ -32,9 +31,6 @@ export class User extends Entity {
   })
   password: string;
 
-  @hasMany(() => Book, { keyTo: 'UserId' })
-  books?: Book[];
-
   constructor(data?: Partial<User>) {
     super(data);
   }
@@ -43,5 +39,3 @@ export class User extends Entity {
 export interface UserRelations {
   // describe navigational properties here
 }
-
-export type UserWithRelations = User & UserRelations;
