@@ -20,7 +20,7 @@
           <v-avatar size="100">
             <img class="text-lg-center" src="/avatar2.jpeg">
           </v-avatar>
-          <p class="white--text subheading mt-1">test</p>
+          <p class="white--text subheading mt-1">undraaaaa</p>
         </v-flex>
         <v-flex class="mt-4 mb-3">
           <Popup @bookAdded="snackbar = true" />
